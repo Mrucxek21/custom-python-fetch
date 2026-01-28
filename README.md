@@ -33,7 +33,7 @@ sudo apt install python3-psutil python3-pil figlet
 
 1. **Clone the repository**:
 ```bash
-git clone https://github.com/your-username/main.git
+git clone https://github.com/Mrucxek21/custom-python-fetch.git
 cd main
 
 ```
