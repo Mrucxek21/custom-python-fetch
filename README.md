@@ -56,6 +56,10 @@ You can customize the information displayed by editing the script:
 
 ---
 
+## 📸 Preview
+
+![Script Preview](result.jpeg)
+
 ### License
 
 MIT
