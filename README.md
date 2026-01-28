@@ -24,9 +24,10 @@ sudo pacman -S python-psutil python-pillow figlet
 ```
 
 ### Debian / Ubuntu
-
+```bash
 sudo apt update
 sudo apt install python3-psutil python3-pil figlet
+```
 
 
 ## 🚀 Quick Start
