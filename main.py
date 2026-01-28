@@ -9,7 +9,6 @@ try:
 except Exception:
     Image = None
 
-# Kolory i formatowanie
 C = "\033[36m"
 M = "\033[35m"
 G = "\033[32m"
@@ -44,10 +43,8 @@ def generate_big_text(text: str, size: int = 80):
         lines = out.rstrip('\n').splitlines()
         return [f"{BOLD}{RED}{line}{RESET}" for line in lines]
     except Exception:
-        # fallback: render text into an image with PIL and convert to ANSI blocks
         try:
             from PIL import ImageDraw, ImageFont
-            # Try common truetype fonts
             font = None
             for fp in ['/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
                        '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf']:
@@ -59,22 +56,16 @@ def generate_big_text(text: str, size: int = 80):
             if font is None:
                 font = ImageFont.load_default()
 
-            # create image large enough
             up = text
-            # estimate size
             dummy = Image.new('RGB', (10, 10), (0, 0, 0))
             draw = ImageDraw.Draw(dummy)
             w, h = draw.textsize(up, font=font)
             img = Image.new('RGB', (w + 10, h + 10), (0, 0, 0))
             draw = ImageDraw.Draw(img)
-            # draw text in red
             draw.text((5, 5), up, font=font, fill=(255, 0, 0))
-            # convert to ASCII-art lines using existing converter
             lines = convert_image_to_ascii(img)
-            # ensure ANSI-wrapped lines are returned
             return lines
         except Exception:
-            # final fallback: simple uppercase single-line
             up = text.upper()
             return [f"{BOLD}{RED}{up}{RESET}"]
 
@@ -121,14 +112,11 @@ def get_cpu():
 
 def get_gpu_info():
     try:
-        # Get GPU name from lspci
         gpu_full = subprocess.check_output("lspci | grep -i 'vga\\|3d\\|2d'", shell=True).decode().strip()
         if not gpu_full:
             return 'N/A'
         gpu_name = gpu_full.split(': ', 1)[-1].strip() if ': ' in gpu_full else gpu_full
         gpu_name = gpu_name.split('(rev')[0].strip()
-        
-
         try:
             vram = subprocess.check_output("nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits 2>/dev/null", shell=True).decode().strip()
             if vram and vram.isdigit():
@@ -136,7 +124,6 @@ def get_gpu_info():
                 return f"{gpu_name} ({vram_gb}GB)"
         except Exception:
             pass
-        # For AMD GPUs try rocm-smi
         try:
             vram = subprocess.check_output("rocm-smi --showmeminfo 2>/dev/null | grep -i 'vram total'", shell=True).decode().strip()
             if vram:
@@ -168,7 +155,6 @@ def get_info():
     }
 
 def convert_image_to_ascii(img):
-    # Use upper-half block '▀' with fg/bg colors to get two pixels per character
     if img is None:
         return []
     pixels = img.load()
@@ -219,7 +205,6 @@ def get_custom_image_logo(path_to_image, width=36):
 
 def display_fetch(image_path=None, width=36):
     info = get_info()
-    # Replace image/logo with a large text banner (no shadow)
     logo = []
     logo.extend(generate_big_text('Windows', size=120))
     logo.append('')
